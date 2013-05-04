@@ -447,7 +447,7 @@ def WriteFullOTAPackage(input_zip, output_zip):
   else:
     build = GetBuildProp("ro.build.date", OPTIONS.info_dict)
     script.Print("******************************************");
-    script.Print("************ UNOFFICIAL BUILD ************");
+    script.Print("************* BUTTERED AOKP **************");
     script.Print("******************************************");
     script.Print("*   Compiled: %s"%(build));
 
