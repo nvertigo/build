@@ -67,23 +67,55 @@ endif
 TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
 TARGET_arm_CFLAGS :=    -O3 \
+			-fgcse-after-reload \
+                        -fipa-cp-clone \
+                        -fpredictive-commoning \
+                        -fsched-spec-load \
+                        -funswitch-loops \
+                        -ftree-loop-distribution \
+                        -ftree-loop-linear \
+                        -fvect-cost-model \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
-                        -funswitch-loops \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing
+
+ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
+TARGET_arm_CFLAGS :=    -fno-tree-vectorize
+endif
 
 # Modules can choose to compile some source as thumb. As
 # non-thumb enabled targets are supported, this is treated
 # as a 'hint'. If thumb is not enabled, these files are just
 # compiled as ARM.
 ifeq ($(ARCH_ARM_HAVE_THUMB_SUPPORT),true)
+    ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION),true)
 TARGET_thumb_CFLAGS :=  -mthumb \
                         -O3 \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=2 \
-                        -Werror=strict-aliasing
+                        -Werror=strict-aliasing \
+			-fgcse-after-reload \
+                        -fsched-spec-load \
+                        -funswitch-loops \
+                        -fvect-cost-model \
+                        -fipa-cp-clone \
+                        -pipe
+    else
+TARGET_thumb_CFLAGS :=  -mthumb \
+                        -O2 \
+                        -fomit-frame-pointer \
+                        -fstrict-aliasing \
+                        -Wstrict-aliasing=2 \
+                        -Werror=strict-aliasing \
+                        -fgcse-after-reload \
+                        -fsched-spec-load \
+                        -funswitch-loops \
+                        -fvect-cost-model \
+                        -fipa-cp-clone \
+                        -pipe
+    endif
 else
 TARGET_thumb_CFLAGS := $(TARGET_arm_CFLAGS)
 endif
@@ -127,6 +159,7 @@ TARGET_GLOBAL_CFLAGS += \
 			-Werror=format-security \
 			-D_FORTIFY_SOURCE=1 \
 			-fno-short-enums \
+			-pipe \
 			$(arch_variant_cflags)
 
 android_config_h := $(call select-android-config-h,linux-arm)
@@ -157,7 +190,6 @@ TARGET_GLOBAL_LDFLAGS += \
 			-Wl,-z,relro \
 			-Wl,-z,now \
 			-Wl,--warn-shared-textrel \
-			-Wl,--icf=safe \
 			$(arch_variant_ldflags)
 
 # We only need thumb interworking in cases where thumb support
@@ -175,11 +207,16 @@ ifneq ($(DEBUG_NO_STDCXX11),yes)
 TARGET_GLOBAL_CPPFLAGS += $(call cc-option,-std=gnu++11)
 endif
 
+ifneq ($(DEBUG_NO_STDC11),yes)
+LOCAL_C11_FILES := $(filter %.c, $(LOCAL_SRC_FILES))
+TARGET_GLOBAL_CFLAGS += $(call add-src-files-target-cflags, $(LOCAL_C11_FILES), -std=gnu11)
+endif
+
 # More flags/options can be added here
 TARGET_RELEASE_CFLAGS += \
                         -DNDEBUG \
                         -g \
-                        -Wstrict-aliasing=2 \
+                        -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing \
                         -fgcse-after-reload \
                         -frerun-cse-after-loop \
@@ -266,10 +303,7 @@ TARGET_DEFAULT_SYSTEM_SHARED_LIBRARIES := libc libstdc++ libm
 
 TARGET_CUSTOM_LD_COMMAND := true
 
-# Enable the Dalvik JIT compiler if not already specified.
-ifeq ($(strip $(WITH_JIT)),)
-    WITH_JIT := true
-endif
+WITH_JIT := true
 
 define transform-o-to-shared-lib-inner
 $(hide) $(PRIVATE_CXX) \
