@@ -173,6 +173,12 @@ TARGET_GLOBAL_CFLAGS += $(TARGET_ANDROID_CONFIG_CFLAGS)
 ifneq ($(filter 4.6 4.6.% 4.7 4.7.% 4.8 4.8.% 4.9 4.9.%, $(shell $(TARGET_CC) --version)),)
 TARGET_GLOBAL_CFLAGS += -Wno-unused-but-set-variable -fno-builtin-sin \
 			-fno-strict-volatile-bitfields
+ifneq ($(filter 4.8 4.8.%, $(shell $(TARGET_CC) --version)),)
+gcc_variant_ldflags :=
+else
+gcc_variant_ldflags := \
+			-Wl,--icf=safe
+endif
 endif
 
 # This is to avoid the dreaded warning compiler message:
@@ -190,7 +196,7 @@ TARGET_GLOBAL_LDFLAGS += \
 			-Wl,-z,relro \
 			-Wl,-z,now \
 			-Wl,--warn-shared-textrel \
-			$(arch_variant_ldflags)
+			$(arch_variant_ldflags) $(gcc_variant_ldflags)
 
 # We only need thumb interworking in cases where thumb support
 # is available in the architecture, and just to be sure, (and
