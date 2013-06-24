@@ -71,7 +71,7 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing \
-			-funswitch-loops
+			-fno-unswitch-loops
 
 ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
 TARGET_arm_CFLAGS :=    -fno-tree-vectorize
@@ -88,14 +88,16 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
-                        -Werror=strict-aliasing
+                        -Werror=strict-aliasing \
+                        -fno-unswitch-loops
     else
 TARGET_thumb_CFLAGS :=  -mthumb \
                         -O2 \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
-                        -Werror=strict-aliasing
+                        -Werror=strict-aliasing \
+                        -fno-unswitch-loops
     endif
 else
 TARGET_thumb_CFLAGS := $(TARGET_arm_CFLAGS)
