@@ -67,25 +67,22 @@ endif
 TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
 
 TARGET_arm_CFLAGS :=    -O3 \
-			-fgcse-after-reload \
-                        -fipa-cp-clone \
-                        -fpredictive-commoning \
                         -fsched-spec-load \
-                        -funswitch-loops \
                         -ftree-loop-distribution \
-                        -ftree-loop-linear \
-                        -fvect-cost-model \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
+			-fno-hoist-adjacent-loads \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing
 
 ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
     ifneq ($(TARGET_CPU_VARIANT),krait)
         TARGET_arm_CFLAGS :=    -fno-tree-vectorize \
+				-fno-hoist-adjacent-loads \
                                 -fno-aggressive-loop-optimizations
     endif
     TARGET_thumb_CFLAGS :=  -fno-tree-vectorize \
+			    -fno-hoist-adjacent-loads \
                             -fno-aggressive-loop-optimizations
 endif
 
@@ -101,11 +98,8 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=2 \
                         -Werror=strict-aliasing \
-			-fgcse-after-reload \
                         -fsched-spec-load \
-                        -funswitch-loops \
-                        -fvect-cost-model \
-                        -fipa-cp-clone \
+			-fno-hoist-adjacent-loads \
                         -pipe
     else
 TARGET_thumb_CFLAGS :=  -mthumb \
@@ -114,11 +108,7 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=2 \
                         -Werror=strict-aliasing \
-			-fgcse-after-reload \
-                        -fsched-spec-load \
-                        -funswitch-loops \
-                        -fvect-cost-model \
-                        -fipa-cp-clone \
+			-fno-hoist-adjacent-loads \
                         -pipe
     endif
 else
