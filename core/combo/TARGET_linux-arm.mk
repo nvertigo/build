@@ -71,6 +71,8 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing \
+			-fno-tree-slsr \
+			-fno-hoist-adjacent-loads \
 			-funswitch-loops
 
 ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
@@ -88,6 +90,8 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
+			-fno-tree-slsr \
+			-fno-hoist-adjacent-loads \
                         -Werror=strict-aliasing
     else
 TARGET_thumb_CFLAGS :=  -mthumb \
@@ -95,6 +99,8 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=3 \
+			-fno-tree-slsr \
+			-fno-hoist-adjacent-loads \
                         -Werror=strict-aliasing
     endif
 else
