@@ -229,6 +229,9 @@ endif
 TARGET_CPU_ABI2 := $(strip $(TARGET_CPU_ABI2))
 
 # use GCC version defined below
+ifeq ($(TARGET_PRODUCT), aokp_manta-userdebug)
+TARGET_GCC_VERSION := 4.7
+endif
 TARGET_GCC_VERSION := 4.8
 
 # $(1): os/arch
