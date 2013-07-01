@@ -229,7 +229,12 @@ endif
 TARGET_CPU_ABI2 := $(strip $(TARGET_CPU_ABI2))
 
 # use GCC version defined below
-TARGET_GCC_VERSION := 4.8
+# For now nedd fix 
+ifeq ($(TARGET_PRODUCT),aokp_manta)
+  TARGET_GCC_VERSION := 4.7
+else
+  TARGET_GCC_VERSION := 4.8
+endif
 
 # $(1): os/arch
 define select-android-config-h
