@@ -71,18 +71,15 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -ftree-loop-distribution \
                         -fomit-frame-pointer \
                         -fstrict-aliasing \
-			-fno-hoist-adjacent-loads \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing
 
 ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
     ifneq ($(TARGET_CPU_VARIANT),krait)
         TARGET_arm_CFLAGS :=    -fno-tree-vectorize \
-				-fno-hoist-adjacent-loads \
                                 -fno-aggressive-loop-optimizations
     endif
     TARGET_thumb_CFLAGS :=  -fno-tree-vectorize \
-			    -fno-hoist-adjacent-loads \
                             -fno-aggressive-loop-optimizations
 endif
 
@@ -99,7 +96,6 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -Wstrict-aliasing=2 \
                         -Werror=strict-aliasing \
                         -fsched-spec-load \
-			-fno-hoist-adjacent-loads \
                         -pipe
     else
 TARGET_thumb_CFLAGS :=  -mthumb \
@@ -108,7 +104,6 @@ TARGET_thumb_CFLAGS :=  -mthumb \
                         -fstrict-aliasing \
                         -Wstrict-aliasing=2 \
                         -Werror=strict-aliasing \
-			-fno-hoist-adjacent-loads \
                         -pipe
     endif
 else
