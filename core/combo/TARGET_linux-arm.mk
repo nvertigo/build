@@ -74,13 +74,18 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing
 
-ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
-    ifneq ($(TARGET_CPU_VARIANT),krait)
-        TARGET_arm_CFLAGS :=    -fno-tree-vectorize \
+ifeq ($(TARGET_PRODUCT),aokp_manta)
+    TARGET_arm_CFLAGS := -fno-tree-vectorize
+    TARGET_thumb_CFLAGS := -fno-tree-vectorize
+else
+    ifeq ($(ARCH_ARM_HIGH_OPTIMIZATION_COMPAT),true)
+        ifneq ($(TARGET_CPU_VARIANT),krait)
+            TARGET_arm_CFLAGS :=    -fno-tree-vectorize \
+                                    -fno-aggressive-loop-optimizations
+        endif
+        TARGET_thumb_CFLAGS :=  -fno-tree-vectorize \
                                 -fno-aggressive-loop-optimizations
     endif
-    TARGET_thumb_CFLAGS :=  -fno-tree-vectorize \
-                            -fno-aggressive-loop-optimizations
 endif
 
 # Modules can choose to compile some source as thumb. As
