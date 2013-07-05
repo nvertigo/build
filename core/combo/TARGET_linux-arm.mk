@@ -74,7 +74,7 @@ TARGET_arm_CFLAGS :=    -O3 \
                         -Wstrict-aliasing=3 \
                         -Werror=strict-aliasing
 
-ifeq ($(TARGET_PRODUCT),aokp_manta)
+ifeq ($(TARGET_GCC_VERSION),4.7)
     TARGET_arm_CFLAGS := -fno-tree-vectorize
     TARGET_thumb_CFLAGS := -fno-tree-vectorize
 else
